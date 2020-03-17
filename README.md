@@ -1,6 +1,5 @@
-# habit
-
-A new Flutter application.
+# Powerful habit
+A Flutter application to track habits. University project. PRif 17/1
 
 ## Getting Started
 
