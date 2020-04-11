@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "227736988569",
+    "firebase_url": "https://uni-habit.firebaseio.com",
+    "project_id": "uni-habit",
+    "storage_bucket": "uni-habit.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:227736988569:android:726249a5526812fe7c4108",
+        "android_client_info": {
+          "package_name": "com.uni.habit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "227736988569-59qavvnfqjp1tkullfrkvar1h0pbk7pq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.uni.habit",
+            "certificate_hash": "a0ae1b2b3fec23ab24483295e70e85557de47a35"
+          }
+        },
+        {
+          "client_id": "227736988569-m9nlpifur1visrlnqd0ur4r5d84onvqv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyArjme8b7KgJs14YQJBzdfTMSXYUlnZ9Lw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "227736988569-m9nlpifur1visrlnqd0ur4r5d84onvqv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

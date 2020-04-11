@@ -1,11 +1,17 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:habit/components/section-title.dart';
 import 'package:habit/fonts/emotion_icons.dart';
 
+import 'daily-log-list.dart';
 import 'day-card.dart';
 
 class Home extends StatefulWidget {
+  final FirebaseUser user;
+
+  Home({Key key, this.user}) : super(key: key);
+
   @override
   _HomePage createState() => _HomePage();
 }
@@ -47,42 +53,7 @@ class _HomePage extends State<Home> {
               child: Column(
                 children: <Widget>[
                   SectionTitle(title: 'HABIT LOG'),
-                  DayCard(
-                      title: '2020 04 09',
-                      moodEmoji: Emotion.emo_sunglasses,
-                      id: 1),
-                  DayCard(
-                      title: '2020 04 08',
-                      moodEmoji: Emotion.emo_squint,
-                      id: 1),
-                  DayCard(
-                      title: '2020 04 07', moodEmoji: Emotion.emo_happy, id: 0),
-                  DayCard(
-                      title: '2020 04 05', moodEmoji: Emotion.emo_sleep, id: 3),
-                  DayCard(
-                      title: '2020 04 04',
-                      moodEmoji: Emotion.emo_unhappy,
-                      id: 2),
-                  DayCard(
-                      title: '2020 04 03', moodEmoji: Emotion.emo_cry, id: 1),
-                  DayCard(
-                      title: '2020 04 09',
-                      moodEmoji: Emotion.emo_sunglasses,
-                      id: 1),
-                  DayCard(
-                      title: '2020 04 08',
-                      moodEmoji: Emotion.emo_squint,
-                      id: 1),
-                  DayCard(
-                      title: '2020 04 07', moodEmoji: Emotion.emo_happy, id: 0),
-                  DayCard(
-                      title: '2020 04 05', moodEmoji: Emotion.emo_sleep, id: 3),
-                  DayCard(
-                      title: '2020 04 04',
-                      moodEmoji: Emotion.emo_unhappy,
-                      id: 2),
-                  DayCard(
-                      title: '2020 04 03', moodEmoji: Emotion.emo_cry, id: 1),
+                  DailyLogList(user: widget.user),
                   SizedBox(height: 24.0),
                 ],
               ),

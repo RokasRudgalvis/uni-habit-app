@@ -1,8 +1,15 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:habit/components/section-title.dart';
 
+import '../../auth.dart';
+
 class Settings extends StatefulWidget {
+  final FirebaseUser user;
+
   bool reminders = true;
+
+  Settings({Key key, this.user}) : super(key: key);
 
   @override
   _SettingsState createState() => _SettingsState();
@@ -37,7 +44,7 @@ class _SettingsState extends State<Settings> {
               ],
             ),
           ),
-          SectionTitle(title: 'Reminders'),
+          SectionTitle(title: 'REMINDERS'),
           Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
@@ -55,7 +62,15 @@ class _SettingsState extends State<Settings> {
                       value: widget.reminders),
                   Text('On'),
                 ],
-              ))
+              )),
+          SectionTitle(title: 'USER'),
+          Text(widget.user.displayName),
+          MaterialButton(
+            onPressed: () => authService.signOut(),
+            color: Colors.redAccent,
+            textColor: Colors.black,
+            child: Text('Log out'),
+          ),
         ],
       ),
     );

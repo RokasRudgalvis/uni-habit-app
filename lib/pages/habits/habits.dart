@@ -1,33 +1,85 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:habit/components/section-title.dart';
-
+import 'package:habit/db.dart';
+import 'package:habit/models.dart';
 import 'habit-card.dart';
+import 'habits-list.dart';
 
-class Habits extends StatefulWidget {
+class HabitsPage extends StatefulWidget {
+  final FirebaseUser user;
+
+  HabitsPage({Key key, this.user}) : super(key: key);
+
   @override
   _HabitsState createState() => _HabitsState();
 }
 
-class _HabitsState extends State<Habits> {
+class _HabitsState extends State<HabitsPage> {
+  Future<String> createDialog(BuildContext context) {
+    TextEditingController inputController = TextEditingController();
+
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Create new habit'),
+            content: TextField(
+              decoration: InputDecoration(
+                hintText: 'Enter habit title',
+              ),
+              controller: inputController,
+            ),
+            actions: <Widget>[
+              MaterialButton(
+                  onPressed: () => {
+                        Navigator.of(context)
+                            .pop(inputController.text.toString())
+                      },
+                  textColor: Colors.black,
+                  child: Text('Save'))
+            ],
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
+    createHabit(String title) {
+      if (title != null) {
+        // Get current habits
+        DatabaseService().getHabits(widget.user.uid).then((v) {
+          var newHabitsMap = new Map<int, String>.from(v.habits.asMap());
+          newHabitsMap[v.habits.length] = title;
+
+          List<String> newHabitsList = List();
+          newHabitsMap.forEach((k, v) => newHabitsList.add(v));
+
+          var newHabits = new Map();
+          newHabits['id'] = widget.user.uid;
+          newHabits['habits'] = newHabitsList;
+
+          DatabaseService().updateHabits(Habits.fromMap(newHabits));
+
+          SnackBar statusSnackbar =
+              SnackBar(content: Text("Habit was created."));
+          Scaffold.of(context).showSnackBar(statusSnackbar);
+        });
+      }
+    }
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
           children: [
             SectionTitle(title: 'ALL HABITS'),
-            HabitCard(title: 'Wake up before 9:00'),
-            HabitCard(title: 'Study for 2 hours'),
-            HabitCard(title: 'Drink 2l of water'),
-            HabitCard(title: 'Prepare my own food'),
-            HabitCard(title: 'Eat 3000 calories'),
+            HabitsList(user: widget.user)
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          // Add your onPressed code here!
-        },
+        onPressed: () =>
+            createDialog(context).then((title) => createHabit(title)),
         label: Text('New habbit'),
         icon: Icon(Icons.add),
         backgroundColor: Colors.orangeAccent,

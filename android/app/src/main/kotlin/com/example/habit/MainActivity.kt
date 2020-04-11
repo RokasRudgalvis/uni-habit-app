@@ -1,4 +1,4 @@
-package com.example.habit
+package com.uni.habit
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity
