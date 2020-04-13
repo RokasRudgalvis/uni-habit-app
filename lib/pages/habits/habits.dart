@@ -1,21 +1,24 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:habit/components/section-title.dart';
 import 'package:habit/db.dart';
 import 'package:habit/models.dart';
-import 'habit-card.dart';
 import 'habits-list.dart';
 
 class HabitsPage extends StatefulWidget {
   final FirebaseUser user;
+  final DatabaseService databaseService;
 
-  HabitsPage({Key key, this.user}) : super(key: key);
+  HabitsPage({Key key, this.user, this.databaseService}) : super(key: key);
 
   @override
   _HabitsState createState() => _HabitsState();
 }
 
 class _HabitsState extends State<HabitsPage> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
   Future<String> createDialog(BuildContext context) {
     TextEditingController inputController = TextEditingController();
 
@@ -46,9 +49,11 @@ class _HabitsState extends State<HabitsPage> {
   @override
   Widget build(BuildContext context) {
     createHabit(String title) {
+      print('new habbit');
+      print(title);
       if (title != null) {
         // Get current habits
-        DatabaseService().getHabits(widget.user.uid).then((v) {
+        widget.databaseService.getHabits(widget.user.uid).then((v) {
           var newHabitsMap = new Map<int, String>.from(v.habits.asMap());
           newHabitsMap[v.habits.length] = title;
 
@@ -59,21 +64,24 @@ class _HabitsState extends State<HabitsPage> {
           newHabits['id'] = widget.user.uid;
           newHabits['habits'] = newHabitsList;
 
-          DatabaseService().updateHabits(Habits.fromMap(newHabits));
+          widget.databaseService.updateHabits(Habits.fromMap(newHabits));
 
-          SnackBar statusSnackbar =
-              SnackBar(content: Text("Habit was created."));
-          Scaffold.of(context).showSnackBar(statusSnackbar);
+          _scaffoldKey.currentState
+              .showSnackBar(SnackBar(content: Text("Habit was created.")));
         });
       }
     }
 
     return Scaffold(
+      key: _scaffoldKey,
       body: SingleChildScrollView(
         child: Column(
           children: [
             SectionTitle(title: 'ALL HABITS'),
-            HabitsList(user: widget.user)
+            HabitsList(
+              user: widget.user,
+              databaseService: widget.databaseService,
+            )
           ],
         ),
       ),

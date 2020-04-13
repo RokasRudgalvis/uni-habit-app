@@ -1,11 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:habit/db.dart';
 import 'package:habit/pages/habits/habits.dart';
 import 'package:habit/pages/home/home.dart';
 import 'package:habit/pages/login/login.dart';
 import 'package:habit/pages/settings/settings.dart';
 import 'package:habit/pages/statistics/statistics.dart';
 import 'package:provider/provider.dart';
+import 'package:cloud_firestore_mocks/cloud_firestore_mocks.dart';
 
 void main() => runApp(MyApp());
 
@@ -96,7 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
         },
         children: <Widget>[
           Home(user: _user),
-          HabitsPage(user: _user),
+          HabitsPage(user: _user, databaseService: DatabaseService()),
           Statistics(),
           Settings(user: _user),
         ],

@@ -19,7 +19,7 @@ class _DailyLogPageState extends State<DailyLogPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Log day'),
+        title: Text('Log day '),
       ),
       body: Column(
         children: [

@@ -26,6 +26,7 @@ dependencies:
   google_sign_in: 4.4.1
   rxdart: 0.23.1
   provider: 4.0.5
+  lcov: 5.6.0
 
 
   flutter:
@@ -36,6 +37,8 @@ dependencies:
   cupertino_icons: ^0.1.2
 
 dev_dependencies:
+  mockito: 4.1.1
+  cloud_firestore_mocks: 0.4.2
   flutter_test:
     sdk: flutter
 

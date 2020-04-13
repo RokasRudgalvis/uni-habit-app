@@ -6,8 +6,9 @@ import 'habit-card.dart';
 
 class HabitsList extends StatefulWidget {
   final FirebaseUser user;
+  final DatabaseService databaseService;
 
-  HabitsList({Key key, this.user}) : super(key: key);
+  HabitsList({Key key, this.user, this.databaseService}) : super(key: key);
 
   @override
   _HabitsState createState() => _HabitsState();
@@ -19,13 +20,15 @@ class _HabitsState extends State<HabitsList> {
     return Column(
       children: [
         StreamBuilder<Habits>(
-          stream: DatabaseService().streamHabits(widget.user.uid),
+          stream: widget.databaseService.streamHabits(widget.user.uid),
           builder: (BuildContext context, AsyncSnapshot<Habits> snapshot) {
+            if (!snapshot.hasData) return Text('Loading...');
+
             var habitsDoc = snapshot.data;
 
-            if (habitsDoc == null) {
-              return Text('Loading...');
-            }
+            print('map start');
+            print(habitsDoc.habits.asMap());
+            print('map start');
 
             return Column(
               children: List.from(habitsDoc.habits

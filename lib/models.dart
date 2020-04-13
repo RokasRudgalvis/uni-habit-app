@@ -16,7 +16,9 @@ class Habits {
     Map data = doc.data;
 
     return Habits(
-        id: doc.documentID, habits: List.from(data['habits']) ?? List.from([]));
+      id: doc.documentID ?? '-1',
+      habits: List.from(data['habits']) ?? List.from([]),
+    );
   }
 }
 
@@ -29,17 +31,19 @@ class DailyLog {
 
   factory DailyLog.fromMap(Map data) {
     return DailyLog(
-        id: data['id'] ?? '-1',
-        complete: List.from(data['complete']) ?? List.from([]),
-        date: data['date'] ?? 0);
+      id: data['id'] ?? '-1',
+      complete: List.from(data['complete']) ?? List.from([]),
+      date: data['date'] ?? 0,
+    );
   }
 
   factory DailyLog.fromFirestore(DocumentSnapshot doc) {
     Map data = doc.data;
 
     return DailyLog(
-        id: doc.documentID,
-        date: doc['date'] ?? 0,
-        complete: List.from(data['complete']) ?? List.from([]));
+      id: doc.documentID,
+      date: doc['date'] ?? 0,
+      complete: List.from(data['complete']) ?? List.from([]),
+    );
   }
 }
