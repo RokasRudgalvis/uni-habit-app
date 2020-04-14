@@ -49,8 +49,7 @@ class _HabitsState extends State<HabitsPage> {
   @override
   Widget build(BuildContext context) {
     createHabit(String title) {
-      print('new habbit');
-      print(title);
+      print('New habit (' + title + ') is being created');
       if (title != null) {
         // Get current habits
         widget.databaseService.getHabits(widget.user.uid).then((v) {
@@ -63,6 +62,10 @@ class _HabitsState extends State<HabitsPage> {
           var newHabits = new Map();
           newHabits['id'] = widget.user.uid;
           newHabits['habits'] = newHabitsList;
+
+          print('Printing new Habit instance to be stored into database (1 line):');
+          print(newHabits);
+          print('Expecting to reciever hit in stream builder');
 
           widget.databaseService.updateHabits(Habits.fromMap(newHabits));
 

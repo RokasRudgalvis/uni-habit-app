@@ -26,9 +26,8 @@ class _HabitsState extends State<HabitsList> {
 
             var habitsDoc = snapshot.data;
 
-            print('map start');
+            print('Stream recieved habits. Printing cahnges (1 line):');
             print(habitsDoc.habits.asMap());
-            print('map start');
 
             return Column(
               children: List.from(habitsDoc.habits

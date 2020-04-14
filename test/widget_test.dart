@@ -12,6 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:habit/auth.dart';
 import 'package:habit/db.dart';
+import 'package:habit/main.dart';
+import 'package:habit/models.dart';
 import 'package:habit/pages/habits/habit-card.dart';
 import 'package:habit/pages/habits/habits-list.dart';
 import 'package:habit/pages/habits/habits.dart';
@@ -60,7 +62,7 @@ void main() async {
       );
     }
 
- /*   testWidgets('Read habit smoke test', (WidgetTester tester) async {
+/*    testWidgets('Read habit smoke test', (WidgetTester tester) async {
       // Render the widget
       var habitsPage = await getHabitsPage(user);
       await tester.pumpWidget(makeTestableWidget(child: habitsPage));
@@ -77,8 +79,18 @@ void main() async {
     });*/
 
     testWidgets('Add habit smoke test', (WidgetTester tester) async {
-      // Render the widget
+//      var databaseService = await getDatabaseService(user);
+
+      /* var habitsPage = HabitsPage(
+        user: user,
+        databaseService: databaseService,
+      );*/
+
       var habitsPage = await getHabitsPage(user);
+
+      habitsPage.databaseService.streamHabits(user.uid).listen((d) => stderr.writeln('habits change'));
+      // databaseService.streamHabits('123').listen((d) => stderr.writeln('change 2nd'));
+
       await tester.pumpWidget(makeTestableWidget(child: habitsPage));
 
       // Build Habit app and trigger a frame.
@@ -107,14 +119,18 @@ void main() async {
       var submitButton = find.text('Save');
       expect(submitButton, findsOneWidget);
 
-      /*await firestore.collection('habits').document(user.uid).setData({
-        'habits': [
-          'Wake up before 9:00',
-          'Study for two hours',
-        ],
-      });*/
-
       await tester.tap(submitButton);
+
+
+      var mock = habitsPage.databaseService.db as MockFirestoreInstance;
+
+      mock.collection('habits')
+          .document(user.uid)
+          .setData({
+        'habits': ['test', 'uopa'],
+      });
+
+      stderr.writeln(mock.dump());
 
       // Let the snapshots stream fire a snapshot
       await tester.idle();
@@ -123,12 +139,12 @@ void main() async {
       await tester.pump();
 
       // Verify the output.
-      ///expect(find.text('Some new testing habit name'), findsOneWidget);
-
-      stderr.writeln('done');
+      //expect(find.text('Some new testing habit name'), findsOneWidget);
     });
 
-    /* testWidgets('Read habbit smoke test', (WidgetTester tester) async {
+/*    testWidgets('Read habbit smoke test', (WidgetTester tester) async {
+      var habitsPage = await getHabitsPage(user);
+      await tester.pumpWidget(MyApp());
       await tester.pumpWidget(makeTestableWidget(child: habitsPage));
       expect(find.text('ALL HABITS'), findsOneWidget);
 
