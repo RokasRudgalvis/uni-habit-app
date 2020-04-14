@@ -122,7 +122,7 @@ void main() async {
       await tester.tap(submitButton);
 
 
-      var mock = habitsPage.databaseService.db as MockFirestoreInstance;
+/*      var mock = habitsPage.databaseService.db as MockFirestoreInstance;
 
       mock.collection('habits')
           .document(user.uid)
@@ -130,7 +130,7 @@ void main() async {
         'habits': ['test', 'uopa'],
       });
 
-      stderr.writeln(mock.dump());
+      stderr.writeln(mock.dump());*/
 
       // Let the snapshots stream fire a snapshot
       await tester.idle();
@@ -139,7 +139,7 @@ void main() async {
       await tester.pump();
 
       // Verify the output.
-      //expect(find.text('Some new testing habit name'), findsOneWidget);
+      expect(find.text('Some new testing habit name'), findsOneWidget);
     });
 
 /*    testWidgets('Read habbit smoke test', (WidgetTester tester) async {
