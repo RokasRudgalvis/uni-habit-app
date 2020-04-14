@@ -62,7 +62,7 @@ void main() async {
       );
     }
 
-/*    testWidgets('Read habit smoke test', (WidgetTester tester) async {
+    testWidgets('Read habit smoke test', (WidgetTester tester) async {
       // Render the widget
       var habitsPage = await getHabitsPage(user);
       await tester.pumpWidget(makeTestableWidget(child: habitsPage));
@@ -76,21 +76,11 @@ void main() async {
       // Verify the output.
       expect(find.text('Wake up before 9:00'), findsOneWidget);
       expect(find.text('Study for two hours'), findsOneWidget);
-    });*/
+    });
 
     testWidgets('Add habit smoke test', (WidgetTester tester) async {
-//      var databaseService = await getDatabaseService(user);
-
-      /* var habitsPage = HabitsPage(
-        user: user,
-        databaseService: databaseService,
-      );*/
-
+      // Render the widget
       var habitsPage = await getHabitsPage(user);
-
-      habitsPage.databaseService.streamHabits(user.uid).listen((d) => stderr.writeln('habits change'));
-      // databaseService.streamHabits('123').listen((d) => stderr.writeln('change 2nd'));
-
       await tester.pumpWidget(makeTestableWidget(child: habitsPage));
 
       // Build Habit app and trigger a frame.
@@ -121,25 +111,21 @@ void main() async {
 
       await tester.tap(submitButton);
 
-
-      var mock = habitsPage.databaseService.db as MockFirestoreInstance;
-
-      mock.collection('habits')
-          .document(user.uid)
-          .setData({
-        'habits': ['test', 'uopa'],
-      });
-
-      stderr.writeln(mock.dump());
-
-      // Let the snapshots stream fire a snapshot
-      await tester.idle();
-
       // Re-render
       await tester.pump();
 
       // Verify the output.
-      //expect(find.text('Some new testing habit name'), findsOneWidget);
+      expect(find.text('Habit was created.'), findsOneWidget);
+    });
+
+    testWidgets('Edit habit smoke test', (WidgetTester tester) async {
+      // Render the widget
+      var habitsPage = await getHabitsPage(user);
+      await tester.pumpWidget(makeTestableWidget(child: habitsPage));
+
+      // See action button
+      var addButton = find.byType(FloatingActionButton);
+      expect(addButton, findsOneWidget);
     });
 
 /*    testWidgets('Read habbit smoke test', (WidgetTester tester) async {
