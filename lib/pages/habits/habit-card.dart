@@ -16,7 +16,7 @@ class HabitCard extends StatefulWidget {
 class _HabitCardState extends State<HabitCard> {
   Future<String> createDialog(BuildContext context) {
     TextEditingController inputController =
-        TextEditingController(text: widget.title);
+    TextEditingController(text: widget.title);
 
     return showDialog(
         context: context,
@@ -31,12 +31,43 @@ class _HabitCardState extends State<HabitCard> {
             ),
             actions: <Widget>[
               MaterialButton(
-                  onPressed: () => {
-                        Navigator.of(context)
-                            .pop(inputController.text.toString())
-                      },
+                  onPressed: () =>
+                  {
+                    Navigator.of(context)
+                        .pop(inputController.text.toString())
+                  },
                   textColor: Colors.black,
-                  child: Text('Save'))
+                  child: Text('Save the changes'))
+            ],
+          );
+        });
+  }
+
+  Future<String> createConfirmDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Are you sure?'),
+            content: Text('Please confirm you really want to delete the habit.'),
+            actions: <Widget>[
+              MaterialButton(
+                  onPressed: () =>
+                  {
+                    Navigator.of(context)
+                        .pop()
+                  },
+                  textColor: Colors.black,
+                  child: Text('Cancel')),
+              MaterialButton(
+                  onPressed: () =>
+                  {
+                    Navigator.of(context)
+                        .pop('delete')
+                  },
+                  textColor: Colors.black,
+                  color: Colors.redAccent,
+                  child: Text('Delete')),
             ],
           );
         });
@@ -52,7 +83,7 @@ class _HabitCardState extends State<HabitCard> {
 
         // Update database
         var newHabitsMap =
-            new Map<int, String>.from(widget.habits.habits.asMap());
+        new Map<int, String>.from(widget.habits.habits.asMap());
         newHabitsMap.update(widget.index, (t) => newValue);
 
         // Convert to list
@@ -67,14 +98,14 @@ class _HabitCardState extends State<HabitCard> {
 
         // Show snackbar
         SnackBar statusSnackbar =
-            SnackBar(content: Text("Habit title updated."));
+        SnackBar(content: Text("Habit title updated."));
         Scaffold.of(context).showSnackBar(statusSnackbar);
       }
     }
 
     removeHabit() {
       var newHabitsMap =
-          new Map<int, String>.from(widget.habits.habits.asMap());
+      new Map<int, String>.from(widget.habits.habits.asMap());
       newHabitsMap.remove(widget.index);
 
       List<String> newHabitsList = List();
@@ -93,27 +124,33 @@ class _HabitCardState extends State<HabitCard> {
 
     return Container(
         child: Card(
-      child: ListTile(
-        title: Text(widget.title ?? '--'),
-        trailing: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Wrap(
+          child: ListTile(
+            title: Text(widget.title ?? '--'),
+            trailing: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                IconButton(
-                  onPressed: () => createDialog(context)
-                      .then((newValue) => updateHabits(newValue)),
-                  icon: Icon(Icons.edit),
-                ),
-                IconButton(
-                  onPressed: () => removeHabit(),
-                  icon: Icon(Icons.delete),
+                Wrap(
+                  children: [
+                    IconButton(
+                      onPressed: () =>
+                          createDialog(context)
+                              .then((newValue) => updateHabits(newValue)),
+                      icon: Icon(Icons.edit),
+                    ),
+                    IconButton(
+                      onPressed: () =>
+                          createConfirmDialog(context).then((confirmed) {
+                            if (confirmed == 'delete') {
+                              removeHabit();
+                            }
+                          }),
+                      icon: Icon(Icons.delete),
+                    )
+                  ],
                 )
               ],
-            )
-          ],
-        ),
-      ),
-    ));
+            ),
+          ),
+        ));
   }
 }
