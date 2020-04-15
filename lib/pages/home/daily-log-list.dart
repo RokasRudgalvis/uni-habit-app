@@ -45,6 +45,8 @@ class _DailyLogListPage extends State<DailyLogList> {
 
             var dailyLogDoc = snapshot.data;
 
+            print(dailyLogDoc[0].date);
+
             return Column(
               children: List.from(dailyLogDoc
                   .asMap()

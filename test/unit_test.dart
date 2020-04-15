@@ -46,7 +46,7 @@ void main() {
       'date': Timestamp(0, 0),
     };
 
-    expect(DailyLog.fromMap(mockData).id, '125abe');
+    expect(DailyLog.fromMap(mockData).id, 'd5wqe1df651vs9');
     expect(DailyLog.fromMap(mockData).complete, [].toList());
     expect(DailyLog.fromMap(mockData).date, Timestamp(0, 0));
   });

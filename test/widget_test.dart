@@ -6,18 +6,21 @@
 // tree, read text, and verify that the values of widget properties are correte.dart';
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_firestore_mocks/cloud_firestore_mocks.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:habit/auth.dart';
 import 'package:habit/db.dart';
+import 'package:habit/fonts/emotion_icons.dart';
 import 'package:habit/main.dart';
 import 'package:habit/models.dart';
 import 'package:habit/pages/habits/habit-card.dart';
 import 'package:habit/pages/habits/habits-list.dart';
 import 'package:habit/pages/habits/habits.dart';
 import 'package:mockito/mockito.dart';
+import 'package:provider/provider.dart';
 
 class AuthServiceMock extends Mock implements AuthService {}
 
@@ -32,12 +35,33 @@ void main() async {
   Future<DatabaseService> getDatabaseService(FirebaseUserMock user) async {
     // Populate the mock database.
     final firestore = MockFirestoreInstance();
+
+    // Add habits
     await firestore.collection('habits').document(user.uid).setData({
       'habits': [
         'Wake up before 9:00',
         'Study for two hours',
       ],
     });
+
+    // Add archived days
+    await firestore
+        .collection('dailyLog')
+        .document(user.uid)
+        .collection('days')
+        .add({
+      'complete': [
+        'Wake up before 9:00',
+      ],
+      'date': DateTime.now(),
+      'mood': 4
+    });
+
+    // Add points
+    await firestore
+        .collection('points')
+        .document(user.uid)
+        .setData({'points': 10});
 
     var databaseService = DatabaseService();
     databaseService.db = firestore;
@@ -287,7 +311,8 @@ void main() async {
       expect(find.text('Habit deleted.'), findsOneWidget);
     });
 
-     testWidgets('4.2. Delete habit smoke test (Cancel)', (WidgetTester tester) async {
+    testWidgets('4.2. Delete habit smoke test (Cancel)',
+        (WidgetTester tester) async {
       // Render the widget
       var habitsPage = await getHabitsPage(user);
       await tester.pumpWidget(makeTestableWidget(child: habitsPage));
@@ -331,5 +356,111 @@ void main() async {
       //expect(find.text('Some new testing habit name'), findsOneWidget);
       stderr.writeln('start new');
     });*/
+  });
+
+  group('Main screen test group', () {
+    // Widget will be nested inside. It's needed so that scaffold would be accessible
+    Widget makeTestableWidget({Widget home}) {
+      return MultiProvider(
+        providers: [Provider<FirebaseUser>.value(value: user)],
+        child: MaterialApp(
+          title: 'Test title',
+          theme: ThemeData(
+            primarySwatch: Colors.orange,
+          ),
+          home: home,
+        ),
+      );
+    }
+
+    testWidgets('5. Menu is visible', (WidgetTester tester) async {
+      // Render the widget
+      var home = MyHomePage(title: 'Test title');
+      await tester.pumpWidget(makeTestableWidget(home: home));
+
+      expect(find.byType(BottomNavigationBar), findsOneWidget);
+    });
+
+    testWidgets('6. Home tab is visible', (WidgetTester tester) async {
+      // Render the widget
+      var home = MyHomePage(title: 'Test title');
+      await tester.pumpWidget(makeTestableWidget(home: home));
+
+      expect(find.text('Home'), findsOneWidget);
+    });
+
+    testWidgets('7. Habits tab is visible', (WidgetTester tester) async {
+      // Render the widget
+      var home = MyHomePage(title: 'Test title');
+      await tester.pumpWidget(makeTestableWidget(home: home));
+
+      expect(find.text('Habits'), findsOneWidget);
+    });
+
+    testWidgets('8. Statistics tab is visible', (WidgetTester tester) async {
+      // Render the widget
+      var home = MyHomePage(title: 'Test title');
+      await tester.pumpWidget(makeTestableWidget(home: home));
+
+      expect(find.text('Statistics'), findsOneWidget);
+    });
+
+    testWidgets('9. Settings tab is visible', (WidgetTester tester) async {
+      // Render the widget
+      var home = MyHomePage(title: 'Test title');
+      await tester.pumpWidget(makeTestableWidget(home: home));
+
+      expect(find.text('Settings'), findsOneWidget);
+    });
+  });
+
+  group('Daily habits test group', () {
+    // Widget will be nested inside. It's needed so that scaffold would be accessible
+    Widget makeTestableWidget({Widget home}) {
+      return MultiProvider(
+        providers: [Provider<FirebaseUser>.value(value: user)],
+        child: MaterialApp(
+          title: 'Test title',
+          theme: ThemeData(
+            primarySwatch: Colors.orange,
+          ),
+          home: home,
+        ),
+      );
+    }
+
+    testWidgets('10. Read archived days', (WidgetTester tester) async {
+      // Render the widget
+      var home = MyHomePage(title: 'Test title');
+      await tester.pumpWidget(makeTestableWidget(home: home));
+
+      expect(find.text('HABIT LOG'), findsOneWidget);
+      expect(find.text('Loading...'), findsOneWidget);
+    });
+
+    testWidgets('11. Read points statistics UI', (WidgetTester tester) async {
+      // Render the widget
+      var home = MyHomePage(title: 'Test title');
+      await tester.pumpWidget(makeTestableWidget(home: home));
+
+      expect(find.text('Points: ...'), findsOneWidget);
+    });
+
+    testWidgets('12. Log day', (WidgetTester tester) async {
+      // Render the widget
+      var home = MyHomePage(title: 'Test title');
+      await tester.pumpWidget(makeTestableWidget(home: home));
+
+      expect(find.text('Log day'), findsOneWidget);
+    });
+
+
+    testWidgets('13. Mood statistics UI', (WidgetTester tester) async {
+      // Render the widget
+      var home = MyHomePage(title: 'Test title');
+      await tester.pumpWidget(makeTestableWidget(home: home));
+
+      expect(find.byIcon(Emotion.emo_happy), findsNothing);
+    });
   });
 }

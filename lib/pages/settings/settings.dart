@@ -21,7 +21,7 @@ class _SettingsState extends State<Settings> {
     return Scaffold(
       body: Column(
         children: [
-          SectionTitle(title: 'SETTINGS'),
+        /*  SectionTitle(title: 'SETTINGS'),
           Padding(
             padding:
                 const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
@@ -43,7 +43,7 @@ class _SettingsState extends State<Settings> {
                 ),
               ],
             ),
-          ),
+          ),*/
           SectionTitle(title: 'REMINDERS'),
           Padding(
               padding:
@@ -64,7 +64,7 @@ class _SettingsState extends State<Settings> {
                 ],
               )),
           SectionTitle(title: 'USER'),
-          Text(widget.user.displayName),
+          //Text(widget.user.displayName),
           MaterialButton(
             onPressed: () => authService.signOut(),
             color: Colors.redAccent,
