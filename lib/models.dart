@@ -26,14 +26,16 @@ class DailyLog {
   final String id;
   final Timestamp date;
   final List<String> complete;
+  int mood;
 
-  DailyLog({this.id, this.date, this.complete});
+  DailyLog({this.id, this.mood, this.date, this.complete});
 
   factory DailyLog.fromMap(Map data) {
     return DailyLog(
       id: data['id'] ?? '-1',
       complete: List.from(data['complete']) ?? List.from([]),
-      date: data['date'] ?? 0,
+      date: data['date'] ?? Timestamp(0, 0),
+      mood: data['mood'] ?? -1,
     );
   }
 
@@ -42,7 +44,8 @@ class DailyLog {
 
     return DailyLog(
       id: doc.documentID,
-      date: doc['date'] ?? 0,
+      date: doc['date'] ?? Timestamp(0, 0),
+      mood: doc['mood'] ?? -1,
       complete: List.from(data['complete']) ?? List.from([]),
     );
   }

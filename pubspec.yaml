@@ -17,8 +17,6 @@ environment:
   sdk: ">=2.2.0 <3.0.0"
 
 dependencies:
-
-
   cloud_firestore: 0.13.4+2
   firebase_core: 0.4.4+3
   firebase_analytics: 5.0.11
@@ -27,8 +25,6 @@ dependencies:
   rxdart: 0.23.1
   provider: 4.0.5
   lcov: 5.6.0
-
-
   flutter:
     sdk: flutter
 

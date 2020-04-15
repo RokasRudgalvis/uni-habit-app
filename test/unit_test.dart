@@ -32,9 +32,11 @@ void main() {
       'date': Timestamp(0, 0),
     };
 
-    expect(DailyLog.fromMap(mockData).id, '125abe');
-    expect(DailyLog.fromMap(mockData).complete, ['Some habit', 'Other habit'].toList());
-    expect(DailyLog.fromMap(mockData).date, Timestamp(0, 0));
+    var dailyLog = DailyLog.fromMap(mockData);
+
+    expect(dailyLog.id, '125abe');
+    expect(dailyLog.complete, ['Some habit', 'Other habit'].toList());
+    expect(dailyLog.date, Timestamp(0, 0));
   });
 
   test("b.2 unit test create DailyLog instace from map", () {

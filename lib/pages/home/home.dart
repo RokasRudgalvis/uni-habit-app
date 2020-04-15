@@ -2,7 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:habit/components/section-title.dart';
+import 'package:habit/db.dart';
 import 'package:habit/fonts/emotion_icons.dart';
+import 'package:habit/pages/daily-log/edit-daily-log.dart';
 
 import 'daily-log-list.dart';
 import 'day-card.dart';
@@ -26,30 +28,35 @@ class _HomePage extends State<Home> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
             // Points
-            Container(
-              color: Colors.blueGrey,
-              child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 40.0, horizontal: 40.0),
-                  child: Column(
-                    children: [
-                      Text.rich(TextSpan(
-                          text: 'Points: ',
+            StreamBuilder<int>(
+                stream: DatabaseService().streamPoints(widget.user.uid),
+                builder: (context, snapshot) {
+                  return Container(
+                    color: Colors.blueGrey,
+                    child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 40.0, horizontal: 40.0),
+                        child: Column(
                           children: [
-                            TextSpan(
-                                text: '123',
+                            Text.rich(TextSpan(
+                                text: 'Points: ',
+                                children: [
+                                  TextSpan(
+                                      text: !snapshot.hasData
+                                          ? '...'
+                                          : snapshot.data.toString(),
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black87))
+                                ],
                                 style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black87))
+                                    fontSize: 32.0, color: Colors.black54)))
                           ],
-                          style:
-                              TextStyle(fontSize: 32.0, color: Colors.black54)))
-                    ],
-                  )),
-            ),
+                        )),
+                  );
+                }),
             // Days
             Container(
-              color: Colors.white,
               child: Column(
                 children: <Widget>[
                   SectionTitle(title: 'HABIT LOG'),
@@ -61,7 +68,17 @@ class _HomePage extends State<Home> {
           ])),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          // Add your onPressed code here!
+          DatabaseService().createDailyLog(widget.user.uid).then((d) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => EditDailyLogPage(
+                  user: widget.user,
+                  dailyLog: d,
+                ),
+              ),
+            );
+          });
         },
         label: Text('Log day'),
         icon: Icon(Icons.add),

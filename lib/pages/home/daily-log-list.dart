@@ -1,7 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:habit/components/section-title.dart';
 import 'package:habit/db.dart';
 import 'package:habit/fonts/emotion_icons.dart';
 import 'package:habit/models.dart';
@@ -18,6 +16,23 @@ class DailyLogList extends StatefulWidget {
 }
 
 class _DailyLogListPage extends State<DailyLogList> {
+  IconData getEmoji(DailyLog dailyLog) {
+    switch(dailyLog.mood) {
+      case 0:
+        return Emotion.emo_unhappy;
+      case 1:
+        return Emotion.emo_displeased;
+      case 2:
+        return Emotion.emo_sleep;
+      case 3:
+        return Emotion.emo_happy;
+      case 4:
+        return Emotion.emo_squint;
+    }
+
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -26,28 +41,34 @@ class _DailyLogListPage extends State<DailyLogList> {
           stream: DatabaseService().streamDailyLog(widget.user.uid),
           builder:
               (BuildContext context, AsyncSnapshot<List<DailyLog>> snapshot) {
+            if (!snapshot.hasData) return Text('Loading...');
+
             var dailyLogDoc = snapshot.data;
-
-            if (dailyLogDoc == null) {
-              return Text('Loading...');
-            }
-
-            print(dailyLogDoc);
 
             return Column(
               children: List.from(dailyLogDoc
                   .asMap()
                   .entries
                   .map((entry) {
-                    var year = DateTime.parse(entry.value.date.toDate().toString()).year;
-                    var month = DateTime.parse(entry.value.date.toDate().toString()).month;
-                    var day = DateTime.parse(entry.value.date.toDate().toString()).day;
+                    var year =
+                        DateTime.parse(entry.value.date.toDate().toString())
+                            .year;
+                    var month =
+                        DateTime.parse(entry.value.date.toDate().toString())
+                            .month;
+                    var day =
+                        DateTime.parse(entry.value.date.toDate().toString())
+                            .day;
                     var list = [year, month, day];
 
-                    return DayCard(title: list.join(' '), moodEmoji: Emotion.emo_sunglasses, id: 1, user: widget.user);
-                  })
-                  .toList()
-                  .reversed),
+                    return DayCard(
+                      title: list.join(' '),
+                      moodEmoji: getEmoji(entry.value),
+                      id: 1,
+                      dailyLog: entry.value,
+                      user: widget.user,
+                    );
+                  })),
             );
           },
         ),
