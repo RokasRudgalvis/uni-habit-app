@@ -347,15 +347,6 @@ void main() async {
       expect(find.text('Habit deleted.'), findsNothing);
     });
 
-/*    testWidgets('Read habbit smoke test', (WidgetTester tester) async {
-      var habitsPage = await getHabitsPage(user);
-      await tester.pumpWidget(MyApp());
-      await tester.pumpWidget(makeTestableWidget(child: habitsPage));
-      expect(find.text('ALL HABITS'), findsOneWidget);
-
-      //expect(find.text('Some new testing habit name'), findsOneWidget);
-      stderr.writeln('start new');
-    });*/
   });
 
   group('Main screen test group', () {
